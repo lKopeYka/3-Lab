@@ -1,34 +1,34 @@
 #include "header.h"
 
-// Custom string functions implementation
-size_t my_strlen(const char* str) {
-    size_t len = 0;
-    while (str[len] != '\0') {
-        len++;
+/* Custom string functions implementation */
+size_t custom_strlen(const char* str) {
+    size_t length = 0;
+    while (str[length] != '\0') {
+        length++;
     }
-    return len;
+    return length;
 }
 
-void my_strcpy(char* dest, const char* src) {
-    while (*src != '\0') {
-        *dest = *src;
-        dest++;
-        src++;
+void custom_strcpy(char* destination, const char* source) {
+    while (*source != '\0') {
+        *destination = *source;
+        destination++;
+        source++;
     }
-    *dest = '\0';
+    *destination = '\0';
 }
 
-int my_strcmp(const char* s1, const char* s2) {
-    while (*s1 && (*s1 == *s2)) {
-        s1++;
-        s2++;
+int custom_strcmp(const char* first_str, const char* second_str) {
+    while (*first_str && (*first_str == *second_str)) {
+        first_str++;
+        second_str++;
     }
-    return *(unsigned char*)s1 - *(unsigned char*)s2;
+    return *(unsigned char*)first_str - *(unsigned char*)second_str;
 }
 
-char* my_strchr(const char* str, int c) {
+char* custom_strchr(const char* str, int character) {
     while (*str != '\0') {
-        if (*str == c) {
+        if (*str == character) {
             return (char*)str;
         }
         str++;
@@ -36,26 +36,26 @@ char* my_strchr(const char* str, int c) {
     return NULL;
 }
 
-// Task 1 implementation
-void task1() {
-    printf("\nTask 1: Find number 4 times smaller without division\n");
-    int num;
+/* Task 1: Division by 4 using bit shift */
+void divide_by_four_without_division_operator() {
+    printf("\nTask 1: Division by 4 without division operator\n");
+    int input_number;
     printf("Enter an integer: ");
 
-    while (scanf_s("%d", &num, sizeof(num)) != 1) {
+    while (scanf_s("%d", &input_number, sizeof(input_number)) != 1) {
         printf("Error! Please enter an integer: ");
         while (getchar() != '\n');
     }
 
-    int result = num >> 2;
+    int result = input_number >> 2; // Bitwise right shift
     printf("Result: %d\n", result);
 }
 
-// Student functions implementation
-void inputStudent(Student* s) {
+/* Student record functions */
+void input_student_data(StudentRecord* student) {
     printf("Enter student ID: ");
-    while (scanf_s("%d", &s->recordBookNumber, sizeof(s->recordBookNumber)) != 1 || s->recordBookNumber < 0) {
-        printf("Error! Please enter a positive integer: ");
+    while (scanf_s("%d", &student->student_id, sizeof(student->student_id)) != 1 || student->student_id < 0) {
+        printf("Error! Enter a positive integer: ");
         while (getchar() != '\n');
     }
 
@@ -64,163 +64,165 @@ void inputStudent(Student* s) {
     while (getchar() != '\n');
     fgets(buffer, sizeof(buffer), stdin);
 
-    char* newline = my_strchr(buffer, '\n');
+    char* newline = custom_strchr(buffer, '\n');
     if (newline) *newline = '\0';
 
-    s->lastName = (char*)malloc(my_strlen(buffer) + 1);
-    if (s->lastName == NULL) {
-        printf("Memory allocation error!\n");
+    student->last_name = (char*)malloc(custom_strlen(buffer) + 1);
+    if (!student->last_name) {
+        printf("Memory allocation failed!\n");
         exit(1);
     }
-    my_strcpy(s->lastName, buffer);
+    custom_strcpy(student->last_name, buffer);
 
     printf("Enter enrollment date (DD.MM.YYYY): ");
-    scanf_s("%10s", s->date.date, (unsigned)_countof(s->date.date));
+    scanf_s("%10s", student->enrollment_date.date, (unsigned)_countof(student->enrollment_date.date));
 
     printf("Enter GPA (0-5): ");
-    while (scanf_s("%f", &s->averageGrade, sizeof(s->averageGrade)) != 1 || s->averageGrade < 0 || s->averageGrade > 5) {
-        printf("Error! Please enter a number between 0 and 5: ");
+    while (scanf_s("%f", &student->gpa, sizeof(student->gpa)) != 1 || student->gpa < 0 || student->gpa > 5) {
+        printf("Error! Enter a number between 0 and 5: ");
         while (getchar() != '\n');
     }
 }
 
-void printStudent(const Student* s) {
-    printf("Student ID: %d\n", s->recordBookNumber);
-    printf("Last name: %s\n", s->lastName);
-    printf("Enrollment date: %s\n", s->date.date);
-    printf("GPA: %.2f\n", s->averageGrade);
-    printf("----------------------------\n");
+void print_student_record(const StudentRecord* student) {
+    printf("\nStudent ID: %d\n", student->student_id);
+    printf("Last Name: %s\n", student->last_name);
+    printf("Enrollment Date: %s\n", student->enrollment_date.date);
+    printf("GPA: %.2f\n", student->gpa);
+    printf("------------------------\n");
 }
 
-void searchByLastName(Student* students, int count) {
-    char searchName[100];
+void display_all_students(StudentRecord* students, int student_count) {
+    if (student_count == 0) {
+        printf("No students in database.\n");
+        return;
+    }
+
+    for (int i = 0; i < student_count; i++) {
+        print_student_record(&students[i]);
+    }
+}
+
+void search_student_by_last_name(StudentRecord* students, int student_count) {
+    char search_name[100];
     printf("Enter last name to search: ");
     while (getchar() != '\n');
-    fgets(searchName, sizeof(searchName), stdin);
+    fgets(search_name, sizeof(search_name), stdin);
 
-    char* newline = my_strchr(searchName, '\n');
+    char* newline = custom_strchr(search_name, '\n');
     if (newline) *newline = '\0';
 
     int found = 0;
-    for (int i = 0; i < count; i++) {
-        if (my_strcmp(students[i].lastName, searchName) == 0) {
-            printStudent(&students[i]);
+    for (int i = 0; i < student_count; i++) {
+        if (custom_strcmp(students[i].last_name, search_name) == 0) {
+            print_student_record(&students[i]);
             found = 1;
         }
     }
 
     if (!found) {
-        printf("No students with last name '%s' found.\n", searchName);
+        printf("No students found with last name '%s'\n", search_name);
     }
 }
 
-int deleteStudentsByRecordBook(Student** students, int* count, int threshold) {
-    int newCount = 0;
-    Student* newArray = (Student*)malloc(*count * sizeof(Student));
-    if (newArray == NULL) {
-        printf("Memory allocation error!\n");
-        return *count;
+int remove_students_by_id_threshold(StudentRecord** students, int* student_count, int min_id) {
+    int new_count = 0;
+    StudentRecord* new_array = (StudentRecord*)malloc(*student_count * sizeof(StudentRecord));
+    if (!new_array) {
+        printf("Memory allocation failed!\n");
+        return *student_count;
     }
 
-    for (int i = 0; i < *count; i++) {
-        if ((*students)[i].recordBookNumber >= threshold) {
-            newArray[newCount] = (*students)[i];
-            newCount++;
+    for (int i = 0; i < *student_count; i++) {
+        if ((*students)[i].student_id >= min_id) {
+            new_array[new_count] = (*students)[i];
+            new_count++;
         }
         else {
-            free((*students)[i].lastName);
+            free((*students)[i].last_name);
         }
     }
 
     free(*students);
-    *students = newArray;
-    *count = newCount;
+    *students = new_array;
+    *student_count = new_count;
 
-    return newCount;
+    return new_count;
 }
 
-void addStudent(Student** students, int* count, int* capacity) {
-    if (*count >= *capacity) {
+void add_new_student(StudentRecord** students, int* student_count, int* capacity) {
+    if (*student_count >= *capacity) {
         *capacity *= 2;
-        *students = (Student*)realloc(*students, *capacity * sizeof(Student));
-        if (*students == NULL) {
-            printf("Memory allocation error!\n");
+        *students = (StudentRecord*)realloc(*students, *capacity * sizeof(StudentRecord));
+        if (!*students) {
+            printf("Memory allocation failed!\n");
             exit(1);
         }
     }
 
-    inputStudent(&(*students)[*count]);
-    (*count)++;
+    input_student_data(&(*students)[*student_count]);
+    (*student_count)++;
 }
 
-void viewAllStudents(Student* students, int count) {
-    if (count == 0) {
-        printf("No student data available.\n");
-        return;
-    }
-
-    for (int i = 0; i < count; i++) {
-        printStudent(&students[i]);
-    }
-}
-
-void task2() {
-    printf("\nTask 2: Student Management System\n");
+/* Main student management interface */
+void student_management_system() {
+    printf("\n=== Student Management System ===\n");
 
     int capacity = 2;
-    int count = 0;
-    Student* students = (Student*)malloc(capacity * sizeof(Student));
-    if (students == NULL) {
-        printf("Memory allocation error!\n");
+    int student_count = 0;
+    StudentRecord* students = (StudentRecord*)malloc(capacity * sizeof(StudentRecord));
+    if (!students) {
+        printf("Initial memory allocation failed!\n");
         exit(1);
     }
 
     int choice;
     do {
         printf("\nMenu:\n");
-        printf("1. View all students\n");
+        printf("1. Display all students\n");
         printf("2. Add new student\n");
         printf("3. Search by last name\n");
-        printf("4. Delete students with ID below threshold\n");
-        printf("0. Exit\n");
-        printf("Select option: ");
+        printf("4. Remove students by ID threshold\n");
+        printf("0. Exit to main menu\n");
+        printf("Enter your choice: ");
 
         while (scanf_s("%d", &choice, sizeof(choice)) != 1) {
-            printf("Error! Please enter a number: ");
+            printf("Invalid input! Enter a number: ");
             while (getchar() != '\n');
         }
 
         switch (choice) {
         case 1:
-            viewAllStudents(students, count);
+            display_all_students(students, student_count);
             break;
         case 2:
-            addStudent(&students, &count, &capacity);
+            add_new_student(&students, &student_count, &capacity);
             break;
         case 3:
-            searchByLastName(students, count);
+            search_student_by_last_name(students, student_count);
             break;
         case 4: {
-            int threshold;
-            printf("Enter minimum student ID: ");
-            while (scanf_s("%d", &threshold, sizeof(threshold)) != 1) {
-                printf("Error! Please enter an integer: ");
+            int min_id;
+            printf("Enter minimum student ID to keep: ");
+            while (scanf_s("%d", &min_id, sizeof(min_id)) != 1) {
+                printf("Invalid input! Enter an integer: ");
                 while (getchar() != '\n');
             }
-            count = deleteStudentsByRecordBook(&students, &count, threshold);
-            printf("Deletion complete. Remaining students: %d\n", count);
+            student_count = remove_students_by_id_threshold(&students, &student_count, min_id);
+            printf("Operation complete. Current students: %d\n", student_count);
             break;
         }
         case 0:
-            printf("Exiting student management...\n");
+            printf("Returning to main menu...\n");
             break;
         default:
             printf("Invalid choice! Please try again.\n");
         }
     } while (choice != 0);
 
-    for (int i = 0; i < count; i++) {
-        free(students[i].lastName);
+    /* Cleanup memory */
+    for (int i = 0; i < student_count; i++) {
+        free(students[i].last_name);
     }
     free(students);
 }
