@@ -2,32 +2,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Custom string functions
-size_t my_strlen(const char* str);
-void my_strcpy(char* dest, const char* src);
-int my_strcmp(const char* s1, const char* s2);
-char* my_strchr(const char* str, int c);
+/* Custom string functions (replacements for standard library) */
+size_t custom_strlen(const char* str);
+void custom_strcpy(char* destination, const char* source);
+int custom_strcmp(const char* first_str, const char* second_str);
+char* custom_strchr(const char* str, int character);
 
-// Task 1 function
-void task1();
+/* Task 1: Division by 4 using bitwise operations */
+void divide_by_four_without_division_operator();
 
-// Student structure definitions
+/* Structures for student records */
 typedef struct {
-    char date[11];
+    char date[11];  // Format: "DD.MM.YYYY"
 } EnrollmentDate;
 
 typedef struct {
-    int recordBookNumber;
-    char* lastName;
-    EnrollmentDate date;
-    float averageGrade;
-} Student;
+    int student_id;          // Student ID number
+    char* last_name;         // Student last name (dynamic string)
+    EnrollmentDate enrollment_date;  // Enrollment date
+    float gpa;               // Grade point average (0-5)
+} StudentRecord;
 
-// Student management functions
-void inputStudent(Student* s);
-void printStudent(const Student* s);
-void searchByLastName(Student* students, int count);
-int deleteStudentsByRecordBook(Student** students, int* count, int threshold);
-void addStudent(Student** students, int* count, int* capacity);
-void viewAllStudents(Student* students, int count);
-void task2();
+/* Student record management functions */
+void input_student_data(StudentRecord* student);
+void print_student_record(const StudentRecord* student);
+void search_student_by_last_name(StudentRecord* students, int student_count);
+int remove_students_by_id_threshold(StudentRecord** students, int* student_count, int min_id);
+void add_new_student(StudentRecord** students, int* student_count, int* capacity);
+void display_all_students(StudentRecord* students, int student_count);
+void student_management_system();
